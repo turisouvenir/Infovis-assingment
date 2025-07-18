@@ -1,0 +1,89 @@
+<html>
+
+<head>
+  <title>Antibiotics Effectiveness Against Bacteria</title>
+  <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+  <script type="text/javascript">
+    const bacteria = ["Aerobacter aerogenes", "Brucella abortus", "Brucella anthracis", "Diplococcus pneumoniae", "Escherichia coli", "Klebsiella pneumoniae", "Mycobacterium tuberculosis", "Proteus vulgaris", "Pseudomonas aeruginosa", "Salmonella typhosa", "Salmonella schottmuelleri", "Staphylococcus albus", "Staphylococcus aureus", "Streptococcus fecalis", "Streptococcus hemolyticus", "Streptococcus viridans"];
+    const gramStaining = ["negative", "negative", "positive", "positive", "negative", "negative", "negative", "negative", "negative", "negative", "negative", "positive", "positive", "positive", "positive", "positive"];
+    const penicillinMIC = [870, 1, 0.001, 0.005, 100, 850, 800, 3, 850, 1, 10, 0.007, 0.03, 1, 0.001, 0.005];
+    const streptomycinMIC = [1, 2, 0.01, 11, 0.4, 1.2, 5, 0.1, 2, 0.4, 0.8, 0.1, 0.03, 1, 14, 10];
+    const neomycinMIC = [1.6, 0.02, 0.007, 10, 0.1, 1, 2, 0.1, 0.4, 0.008, 0.09, 0.001, 0.001, 0.1, 10, 40];
+
+    function transformMIC(mic) {
+      const score = 100 - 20 * Math.log10(mic);
+      return Math.max(0, score.toFixed(2));
+    }
+
+
+    const category = bacteria.map((bact, index) => ({
+      label: `${bact} (${gramStaining[index] === "positive" ? "G+" : "G-"})`
+    }));
+
+    const dataset = [
+      {
+        seriesname: "Penicillin",
+        color: "#5D62B5",
+        data: penicillinMIC.map((mic, i) => ({
+          value: transformMIC(mic),
+          tooltext: `<b>Penicillin</b> requires <b>${mic} μg/mL</b> for <b>${bacteria[i]} (${gramStaining[i] === "positive" ? "G+" : "G-"})</b> (Effectiveness Score: ${transformMIC(mic)})`
+        }))
+      },
+      {
+        seriesname: "Streptomycin",
+        color: "#29C3BE",
+        data: streptomycinMIC.map((mic, i) => ({
+          value: transformMIC(mic),
+          tooltext: `<b>Streptomycin</b> requires <b>${mic} μg/mL</b> for <b>${bacteria[i]} (${gramStaining[i] === "positive" ? "G+" : "G-"})</b> (Effectiveness Score: ${transformMIC(mic)})`
+        }))
+      },
+      {
+        seriesname: "Neomycin",
+        color: "#F2726F",
+        data: neomycinMIC.map((mic, i) => ({
+          value: transformMIC(mic),
+          tooltext: `<b>Neomycin</b> requires <b>${mic} μg/mL</b> for <b>${bacteria[i]} (${gramStaining[i] === "positive" ? "G+" : "G-"})</b> (Effectiveness Score: ${transformMIC(mic)})`
+        }))
+      }
+    ];
+
+    const dataSource = {
+      chart: {
+        caption: "Antibiotics Effectiveness Against Bacteria",
+        subcaption: "Effectiveness Score (higher score indicates better effectiveness)",
+        yaxisname: "Effectiveness Score",
+        xaxisname: "Bacteria",
+        theme: "fusion",
+        drawcrossline: "1",
+        showLegend: "1",
+        showValues: "1",
+        legendPosition: "bottom",
+        usePlotGradientColor: "0",
+        showXAxisValues: "1",
+        formatnumberscale: "0",
+        labelDisplay: "auto"
+      },
+      categories: [{ category }],
+      dataset: dataset
+    };
+
+    FusionCharts.ready(function () {
+      var myChart = new FusionCharts({
+        type: "msbar2d",
+        renderAt: "chart-container",
+        width: "100%",
+        height: "900",
+        dataFormat: "json",
+        dataSource
+      }).render();
+    });
+  </script>
+</head>
+
+<body>
+  <div id="chart-container">FusionCharts XT will load here!</div>
+</body>
+
+</html>
